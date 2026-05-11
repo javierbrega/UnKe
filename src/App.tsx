@@ -6,6 +6,7 @@ import {
 } from "lucide-react";
 import { Header } from "./components/header";
 import { Hero } from "./components/hero";
+import { NearbyBusinesses } from "./components/NearbyBusinesses";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -34,6 +35,7 @@ const FadeIn = ({ children, delay = 0, className = "" }: { children: React.React
 export default function App() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedZone, setSelectedZone] = useState("all");
+  const [selectedCategory, setSelectedCategory] = useState("Todos");
   const [contactDialogOpen, setContactDialogOpen] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
@@ -52,6 +54,8 @@ export default function App() {
     const matchesZone = selectedZone === "all" || b.zone.toLowerCase() === selectedZone.toLowerCase();
     return matchesSearch && matchesZone;
   });
+
+  const FILTERS = ["Todos", "Verdulería", "Farmacia", "Kiosco", "Almacén", "Peluquería", "Mecánico", "Veterinaria", "Gimnasio", "Cafetería", "Odontólogo", "Abogado", "Cabañas", "Hoteles", "Turismo", "Bodegas"];
 
   return (
     <div className="min-h-screen bg-background text-foreground overflow-x-hidden selection:bg-primary/30 selection:text-primary">
@@ -86,97 +90,52 @@ export default function App() {
         </div>
       </section>
 
-      {/* 4. Buscador de comercios */}
+      {/* 4. Buscador de comercios por proximidad */}
       <section id="explorar" className="py-24">
         <div className="container mx-auto px-6 max-w-7xl">
           <FadeIn>
-            <div className="mb-16">
+            <div className="mb-10">
               <h2 className="text-3xl md:text-5xl font-bold tracking-tighter mb-4">Encontrá comercios cerca tuyo.</h2>
-              <p className="text-xl text-muted-foreground max-w-2xl">Cada uno te ofrece un descuento especial por ser parte de la red.</p>
+              <p className="text-xl text-muted-foreground max-w-2xl">Usamos tu ubicación para mostrarte los descuentos más relevantes de tu zona.</p>
             </div>
           </FadeIn>
 
-          <FadeIn delay={0.1}>
-            <div className="flex flex-col md:flex-row gap-4 mb-10">
-              <div className="relative flex-1">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground w-5 h-5" />
+          <FadeIn delay={0.1} className="w-full pb-6">
+            <div className="flex flex-col md:flex-row gap-4 items-center max-w-2xl bg-neutral-900/50 p-2 rounded-3xl border border-neutral-800">
+              <div className="relative w-full md:flex-1">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400 w-5 h-5" />
                 <Input 
-                  placeholder="Buscar por nombre o rubro..." 
-                  className="pl-12 h-14 bg-card border-none rounded-2xl text-base ring-offset-background focus-visible:ring-primary/50"
+                  placeholder="Buscar negocio o profesional..." 
+                  className="pl-12 h-14 bg-transparent border-none text-base focus-visible:ring-0 shadow-none"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
               </div>
-              <Select value={selectedZone} onValueChange={setSelectedZone}>
-                <SelectTrigger className="w-full md:w-[240px] h-14 bg-card border-none rounded-2xl text-base ring-offset-background focus:ring-primary/50">
-                  <SelectValue placeholder="Zona" />
-                </SelectTrigger>
-                <SelectContent className="bg-card border-border rounded-xl">
-                  <SelectItem value="all">Todas las zonas</SelectItem>
-                  <SelectItem value="palermo">Palermo</SelectItem>
-                  <SelectItem value="belgrano">Belgrano</SelectItem>
-                  <SelectItem value="recoleta">Recoleta</SelectItem>
-                  <SelectItem value="villa crespo">Villa Crespo</SelectItem>
-                  <SelectItem value="colegiales">Colegiales</SelectItem>
-                </SelectContent>
-              </Select>
+              <div className="w-full md:w-[2px] h-[2px] md:h-10 bg-neutral-800"></div>
+              <div className="w-full md:w-[240px]">
+                <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                  <SelectTrigger className="h-14 bg-transparent border-none text-base focus:ring-0 shadow-none px-4">
+                    <SelectValue placeholder="Seleccionar rubro..." />
+                  </SelectTrigger>
+                  <SelectContent className="bg-neutral-900 border-neutral-800 max-h-[300px]">
+                    {FILTERS.map((filter, i) => (
+                      <SelectItem key={i} value={filter} className="hover:bg-neutral-800 cursor-pointer">
+                        {filter}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
           </FadeIn>
 
-          <FadeIn delay={0.2} className="w-full overflow-x-auto pb-6 -mb-6 hide-scrollbar">
-            <div className="flex gap-2 min-w-max">
-               {["Todos", "Gastronomía", "Salud", "Servicios", "Tiendas", "Belleza"].map((filter, i) => (
-                 <Badge key={i} variant={i === 0 ? "default" : "secondary"} className={`px-4 py-2 text-sm rounded-full font-medium cursor-pointer ${i === 0 ? "bg-primary text-background hover:bg-primary/90" : "bg-card hover:bg-white/10"}`}>
-                   {filter}
-                 </Badge>
-               ))}
-            </div>
+          <FadeIn delay={0.2} className="mt-10">
+            <NearbyBusinesses 
+              businesses={businesses} 
+              selectedCategory={selectedCategory} 
+              searchQuery={searchQuery}
+            />
           </FadeIn>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-10">
-            {filteredBusinesses.map((b, i) => {
-              const Icon = b.icon;
-              return (
-                <FadeIn key={b.id} delay={i * 0.05}>
-                  <Card className="bg-card border-border border overflow-hidden rounded-2xl group hover:shadow-2xl hover:shadow-primary/5 hover:-translate-y-1 transition-all duration-300">
-                    <div className="h-48 overflow-hidden relative">
-                      <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors z-10" />
-                      <img src={b.image} alt={b.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" />
-                      <div className="absolute top-4 right-4 z-20">
-                        <Badge className="bg-primary hover:bg-primary text-background font-bold px-3 py-1 text-sm shadow-lg border-none">
-                          {b.discount}
-                        </Badge>
-                      </div>
-                    </div>
-                    <CardContent className="p-6">
-                      <h3 className="text-2xl font-bold mb-2 text-white">{b.name}</h3>
-                      <div className="flex items-center gap-2 text-muted-foreground mb-3 text-sm">
-                        <Icon className="w-4 h-4" />
-                        <span>{b.category}</span>
-                        <span className="w-1 h-1 rounded-full bg-border" />
-                        <MapPin className="w-4 h-4" />
-                        <span>{b.zone}</span>
-                      </div>
-                      <div className="flex items-center gap-2 mb-4 text-sm font-medium">
-                        <Star className="w-4 h-4 text-amber-400 fill-amber-400" />
-                        <span className="text-foreground">{b.rating}</span>
-                        <span className="text-muted-foreground">({b.reviews} reseñas)</span>
-                      </div>
-                      <p className="text-muted-foreground text-sm mb-6 line-clamp-1">{b.description}</p>
-                      <Button variant="outline" className="w-full rounded-xl border-primary text-primary hover:bg-primary hover:text-background transition-colors h-12">
-                        Ver perfil
-                      </Button>
-                    </CardContent>
-                  </Card>
-                </FadeIn>
-              )
-            })}
-          </div>
-          {filteredBusinesses.length === 0 && (
-            <div className="text-center py-20 text-muted-foreground">
-              No encontramos comercios para tu búsqueda. Probá con otra zona.
-            </div>
-          )}
         </div>
       </section>
 
