@@ -1,9 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion } from "motion/react";
 import {
-  Menu, X, Search, QrCode, UserPlus, MessageCircle,
+  Search, QrCode, UserPlus, MessageCircle,
   TrendingUp, Gift, Globe, BarChart3, MapPin, Star, ChevronDown, Check,
 } from "lucide-react";
+import { Header } from "./components/header";
+import { Hero } from "./components/hero";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -30,17 +32,10 @@ const FadeIn = ({ children, delay = 0, className = "" }: { children: React.React
 );
 
 export default function App() {
-  const [scrolled, setScrolled] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedZone, setSelectedZone] = useState("all");
   const [contactDialogOpen, setContactDialogOpen] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
 
   const handleContactSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -62,74 +57,10 @@ export default function App() {
     <div className="min-h-screen bg-background text-foreground overflow-x-hidden selection:bg-primary/30 selection:text-primary">
       
       {/* 1. Navbar */}
-      <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? "bg-background/80 backdrop-blur-md border-b border-white/5 py-4" : "bg-transparent py-6"}`}>
-        <div className="container mx-auto px-6 max-w-7xl flex items-center justify-between">
-          <div className="flex items-center gap-1 cursor-pointer">
-            <span className="text-2xl font-bold tracking-tighter">UnKe<span className="text-primary">.</span></span>
-          </div>
-
-          {/* Desktop Nav */}
-          <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-muted-foreground">
-            <a href="#buscar" className="hover:text-primary transition-colors">Explorar</a>
-            <a href="#como-funciona" className="hover:text-primary transition-colors">Cómo funciona</a>
-            <a href="#comercios" className="hover:text-primary transition-colors">Para comercios</a>
-            <a href="#faq" className="hover:text-primary transition-colors">FAQ</a>
-          </nav>
-          
-          <div className="hidden md:block">
-            <Button className="font-semibold text-background rounded-full px-6">Suscribirme</Button>
-          </div>
-
-          {/* Mobile Nav */}
-          <div className="md:hidden">
-            <Sheet>
-              <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="text-foreground">
-                  <Menu className="w-6 h-6" />
-                </Button>
-              </SheetTrigger>
-              <SheetContent className="bg-background border-border">
-                <div className="flex flex-col gap-8 mt-12 text-lg font-medium">
-                  <a href="#buscar" className="hover:text-primary transition-colors">Explorar</a>
-                  <a href="#como-funciona" className="hover:text-primary transition-colors">Cómo funciona</a>
-                  <a href="#comercios" className="hover:text-primary transition-colors">Para comercios</a>
-                  <a href="#faq" className="hover:text-primary transition-colors">FAQ</a>
-                  <Button className="font-semibold text-background rounded-full w-full mt-4" size="lg">Suscribirme</Button>
-                </div>
-              </SheetContent>
-            </Sheet>
-          </div>
-        </div>
-      </header>
+      <Header />
 
       {/* 2. Hero Section */}
-      <section className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-primary/10 via-background to-background -z-10" />
-        <div className="absolute top-1/4 right-0 w-96 h-96 bg-primary/20 blur-[120px] rounded-full -z-10 pointer-events-none" />
-        
-        <div className="container mx-auto px-6 max-w-7xl">
-          <div className="max-w-4xl">
-            <FadeIn>
-              <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter leading-[1.05] mb-8">
-                La red de comercios <br className="hidden md:block" />que se ayudan <span className="text-primary italic font-serif pr-2">entre sí.</span>
-              </h1>
-            </FadeIn>
-            <FadeIn delay={0.1}>
-              <p className="text-xl md:text-2xl text-muted-foreground mb-12 max-w-2xl leading-relaxed">
-                Descubrí negocios locales con descuentos exclusivos para suscriptores. Escaneá un QR, sumate a la comunidad y ahorrá todos los días.
-              </p>
-            </FadeIn>
-            <FadeIn delay={0.2} className="flex flex-col sm:flex-row gap-4">
-              <Button asChild size="lg" className="rounded-full text-background font-semibold h-14 px-8 text-base shadow-[0_0_40px_-10px_rgba(200,255,0,0.5)]">
-                <a href="#buscar">Explorar comercios</a>
-              </Button>
-              <Button asChild variant="outline" size="lg" className="rounded-full font-semibold h-14 px-8 text-base border-white/20 hover:bg-white/5">
-                <a href="#comercios">¿Sos comercio? Sumate</a>
-              </Button>
-            </FadeIn>
-          </div>
-        </div>
-      </section>
+      <Hero />
 
       {/* 3. ¿Cómo funciona? */}
       <section id="como-funciona" className="py-24 bg-card/30 border-y border-white/5">
@@ -156,7 +87,7 @@ export default function App() {
       </section>
 
       {/* 4. Buscador de comercios */}
-      <section id="buscar" className="py-24">
+      <section id="explorar" className="py-24">
         <div className="container mx-auto px-6 max-w-7xl">
           <FadeIn>
             <div className="mb-16">
@@ -265,10 +196,8 @@ export default function App() {
               </FadeIn>
               <FadeIn delay={0.1}>
                 <Dialog open={contactDialogOpen} onOpenChange={setContactDialogOpen}>
-                  <DialogTrigger asChild>
-                    <Button size="lg" className="rounded-full text-background font-semibold h-14 px-8 shadow-xl shadow-primary/20 text-base">
+                  <DialogTrigger render={<Button size="lg" className="rounded-full text-background font-semibold h-14 px-8 shadow-xl shadow-primary/20 text-base" />}>
                       Quiero sumar mi comercio
-                    </Button>
                   </DialogTrigger>
                   <DialogContent className="bg-card border-border sm:max-w-md rounded-3xl">
                     <DialogHeader>
@@ -433,7 +362,10 @@ export default function App() {
         <div className="container mx-auto px-6 max-w-7xl">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
             <div className="md:col-span-1">
-              <span className="text-3xl font-bold tracking-tighter mb-4 block">UnKe<span className="text-primary">.</span></span>
+              <div className="flex items-center gap-3 mb-4">
+                <img src="/logo.png" alt="UnKe Logo" className="w-10 h-10 rounded-full object-contain bg-black" />
+                <span className="text-3xl font-bold tracking-tighter">UnKe<span className="text-primary">.</span></span>
+              </div>
               <p className="text-muted-foreground text-sm leading-relaxed mb-6">
                 La red premium de beneficios cruzados donde todos ganan. Comunidad, ahorro y proximidad.
               </p>
@@ -450,8 +382,8 @@ export default function App() {
             <div>
               <h4 className="font-semibold text-lg mb-4 text-foreground">Plataforma</h4>
               <ul className="space-y-3 text-sm text-muted-foreground">
-                <li><a href="#buscar" className="hover:text-primary transition-colors">Explorar comercios</a></li>
-                <li><a href="#" className="hover:text-primary transition-colors">Suscribirse</a></li>
+                <li><a href="#explorar" className="hover:text-primary transition-colors">Explorar comercios</a></li>
+                <li><a href="#suscribirme" className="hover:text-primary transition-colors">Suscribirse</a></li>
                 <li><a href="#como-funciona" className="hover:text-primary transition-colors">Cómo funciona</a></li>
                 <li><a href="#faq" className="hover:text-primary transition-colors">Centro de ayuda</a></li>
               </ul>
