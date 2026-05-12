@@ -1,20 +1,27 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# UnKe Ecosystem Monorepo
 
-# Run and deploy your AI Studio app
+Este repositorio contiene la arquitectura completa del ecosistema UnKe utilizando **Turborepo, Next.js 14, Tailwind CSS, y Supabase**.
 
-This contains everything you need to run your app locally.
+## Estructura
 
-View your app in AI Studio: https://ai.studio/apps/45f8ae39-e942-45d1-9a5d-23db1cb5719f
+- \`apps/landing\`: Sitio institucional (unke.ar).
+- \`apps/guide\`: Guía digital pública (guia.unke.ar).
+- \`apps/dashboard-merchant\`: Panel para comercios y profesionales (app.unke.ar).
+- \`apps/dashboard-closer\`: Panel para vendedores y asesores (closer.unke.ar).
+- \`apps/agents\`: Edge Functions y Agentes de IA de Supabase.
+- \`apps/backend\`: Tareas, webhooks y procesos en background (Supabase).
+- \`packages/ui\`: Componentes compartidos (Shadcn/ui).
+- \`packages/types\`: Interfaces TypeScript compartidas.
+- \`packages/lib\`: Utilidades y helpers compartidos.
+- \`packages/tailwind-config\`: Configuración global de diseño.
+- \`packages/supabase\`: Cliente de Supabase compartido.
 
-## Run Locally
+## Scripts principales
 
-**Prerequisites:**  Node.js
+- \`npm run dev\` - Inicia el Dashboard de Comercios en modo desarrollo.
+- \`npm run dev:closer\` - Inicia el Dashboard del Vendedor en modo desarrollo.
+- \`npm run dev:landing\` - Inicia la Landing en modo desarrollo.
+- \`npm run build\` - Compila todas las aplicaciones.
 
-
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+## Entorno de Desarrollo Limitado
+En entornos con puerto único expuesto (como AI Studio), Next.js requiere que se levante una app a la vez, por eso dividimos los comandos de inicio.

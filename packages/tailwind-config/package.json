@@ -1,0 +1,8 @@
+{
+  "name": "@unke/tailwind-config",
+  "version": "1.0.0",
+  "main": "tailwind.config.ts",
+  "dependencies": {
+    "tailwindcss": "^3.4.0"
+  }
+}

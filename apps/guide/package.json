@@ -1,0 +1,8 @@
+{
+  "name": "@unke/guide",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 3004"
+  }
+}
